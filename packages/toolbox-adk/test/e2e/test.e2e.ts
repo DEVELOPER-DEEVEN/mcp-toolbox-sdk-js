@@ -152,9 +152,10 @@ describe('ToolboxClient E2E Tests', () => {
     it('should throw an error when trying to load a non-existent toolset', async () => {
       await expect(
         commonToolboxClient.loadToolset('non-existent-toolset'),
-      ).rejects.toThrow('Request failed with status code 404');
+      ).rejects.toThrow('MCP request failed with code -32600: toolset does not exist');
     });
   });
+
   describe('bindParams', () => {
     it('should successfully bind a parameter with bindParam and invoke', async () => {
       const newTool = getNRowsTool.bindParam('num_rows', '3');
@@ -291,8 +292,8 @@ describe('ToolboxClient E2E Tests', () => {
         expect(axiosError.response?.status).toBe(401);
         expect(axiosError.response?.data).toEqual(
           expect.objectContaining({
-            error:
-              'tool invocation not authorized. Please make sure your specify correct auth headers',
+            message:
+              'unauthorized Tool call: Please make sure your specify correct auth headers: unauthorized',
           }),
         );
       }
@@ -363,8 +364,8 @@ describe('ToolboxClient E2E Tests', () => {
         const axiosError = error as AxiosError;
         expect(axiosError.response?.data).toEqual(
           expect.objectContaining({
-            error:
-              'provided parameters were invalid: error parsing authenticated parameter "data": no field named row_data in claims',
+            message:
+              'provided parameters were invalid: error parsing authenticated parameter \"data\": no field named row_data in claims',
           }),
         );
       }
