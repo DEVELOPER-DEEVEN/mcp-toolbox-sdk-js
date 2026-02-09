@@ -68,6 +68,7 @@ class ToolboxClient {
     clientVersion?: string,
   ) {
     this.#clientHeaders = clientHeaders || {};
+    warnIfHttpAndHeaders(url, this.#clientHeaders);
     if (!getSupportedMcpVersions().includes(protocol)) {
       throw new Error(`Unsupported protocol version: ${protocol}`);
     }
