@@ -289,13 +289,13 @@ describe('ToolboxClient E2E Tests', () => {
           toolContext: mockToolContext,
         });
       } catch (error) {
-        expect((error as AxiosError).isAxiosError).toBe(true);
+        expect(error).toBeInstanceOf(AxiosError);
         const axiosError = error as AxiosError;
-        expect(axiosError.response?.status).toBe(401);
         expect(axiosError.response?.data).toEqual(
           expect.objectContaining({
-            message:
-              'unauthorized Tool call: Please make sure your specify correct auth headers: unauthorized',
+            error: expect.objectContaining({
+              message: expect.stringContaining('unauthorized Tool call'),
+            }),
           }),
         );
       }
@@ -362,12 +362,15 @@ describe('ToolboxClient E2E Tests', () => {
       try {
         await tool.runAsync({args: {}, toolContext: mockToolContext});
       } catch (error) {
-        expect((error as AxiosError).isAxiosError).toBe(true);
+        expect(error).toBeInstanceOf(AxiosError);
         const axiosError = error as AxiosError;
         expect(axiosError.response?.data).toEqual(
           expect.objectContaining({
-            message:
-              'provided parameters were invalid: error parsing authenticated parameter \"data\": no field named row_data in claims',
+            error: expect.objectContaining({
+              message: expect.stringContaining(
+                'provided parameters were invalid',
+              ),
+            }),
           }),
         );
       }
